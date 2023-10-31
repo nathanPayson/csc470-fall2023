@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     int rings = 0;
     //Accidentally a bit confusing below....
     public TMP_Text rightText;
-    float timerText = 50;
+    float timerText = 80;
     public GameObject winPanel;
     public GameObject losePanel;
     int bossHealth = 50;
@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
     bool bossDefeated = false;
     bool bossActive = false;
     bool playerDead = false;
+    bool jewelFound = false;
+    int difficultySetting = -1;
+    bool forcedloss = false;
+    bool scene1Initiated = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -35,15 +39,16 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Part1")
         {
+            if (scene1Initiated) {
             updateTimer();
-
+            }
             if (timerText == 0)
             {
-                if (rings >= 20)
+                if (rings >= 25)
                 {
                     winPanel.SetActive(true);
                 }
-                if (rings < 20)
+                if (rings < 25)
                 {
                     losePanel.SetActive(true);
                 }
@@ -52,7 +57,7 @@ public class GameManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "Part2" || SceneManager.GetActiveScene().name == "Boss Test")
         {
             //Win/Loss Conditions Check
-            if (bossHealth<=10)
+            if (bossHealth<=1)
             {
                 winPanel.SetActive(true);
                 bossDefeated = true;
@@ -63,7 +68,7 @@ public class GameManager : MonoBehaviour
             //UI Updates
             if(bossActive == true)
             {
-                rightText.text = "Boss Health: " + bossHealth + "/50";
+                rightText.text = "Boss Health: " + (bossHealth-1) + "/100";
             }
             else{
                 rightText.text = "";
@@ -74,13 +79,28 @@ public class GameManager : MonoBehaviour
         {
             losePanel.SetActive(true);
         }
+        if(SceneManager.GetActiveScene().name == "Part3")
+        {
+            
+            leftText.text = "Press Esc to Leave";
+            if (jewelFound)
+            {
+                winPanel.SetActive(true);
+                rightText.text = "What Happens Next? TBD";
+            }
+            else if(forcedloss)
+            {
+                losePanel.SetActive(true);
+            }
+
+        }
         
     }
 
     public void updateRings()
     {
         rings++;
-        leftText.SetText("Rings: " + rings + "/30");
+        leftText.SetText("Rings: " + rings + "/25");
     }
 
     void updateTimer()
@@ -112,5 +132,29 @@ public class GameManager : MonoBehaviour
     public void playerDied()
     {
         playerDead = true;
+    }
+    public void foundJewel()
+    {
+        jewelFound = true;
+    }
+    public void setDifficult(int difficult)
+    {
+        difficultySetting = difficult;
+    }
+    public int getDifficulty()
+    {
+        return difficultySetting;
+    }
+    public void forceLoss()
+    {
+        forcedloss = true;
+    }
+    public void setTimer(int speed)
+    {
+        timerText = speed;
+    }
+    public void initiateScene1()
+    {
+        scene1Initiated = true;
     }
 }

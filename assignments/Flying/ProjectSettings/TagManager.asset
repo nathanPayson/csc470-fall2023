@@ -10,6 +10,8 @@ TagManager:
   - Boss
   - Boss Bullet
   - Ring
+  - PlayerPlat
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
